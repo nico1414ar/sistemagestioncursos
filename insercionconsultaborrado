@@ -1,0 +1,68 @@
+-- =====================================
+-- Inserción de datos de ejemplo
+-- =====================================
+INSERT INTO Alumno(nombre, dni, email, telefono) VALUES
+('Juan Pérez', '12345678', 'juan@example.com', '123456789'),
+('Ana López', '87654321', 'ana@example.com', '987654321');
+
+INSERT INTO Curso(nombre, descripcion, duracion, cupo_maximo, fecha_inicio, fecha_fin) VALUES
+('Java Básico', 'Curso de introducción a Java', 30, 20, '2025-11-01', '2025-11-30'),
+('Python Intermedio', 'Curso de Python avanzado', 40, 15, '2025-11-05', '2025-12-10');
+
+INSERT INTO Inscripcion(id_alumno, id_curso) VALUES
+(1, 1),
+(2, 2);
+
+INSERT INTO Asistencia(id_inscripcion, fecha_clase, presente) VALUES
+(1, '2025-11-02', TRUE),
+(2, '2025-11-06', TRUE);
+
+INSERT INTO Pago(id_inscripcion, monto) VALUES
+(1, 1000.00),
+(2, 1200.00);
+
+INSERT INTO Certificado(id_inscripcion, archivo) VALUES
+(1, 'certificado_juan.pdf'),
+(2, 'certificado_ana.pdf');
+
+
+-- =====================================
+-- Consultas SQL de ejemplo
+-- =====================================
+
+-- Consultar todos los alumnos
+SELECT * FROM Alumno;
+
+-- Cursos con cupo disponible
+SELECT c.nombre, c.cupo_maximo, COUNT(i.id_inscripcion) AS inscriptos
+FROM Curso c
+LEFT JOIN Inscripcion i ON c.id_curso = i.id_curso
+GROUP BY c.id_curso
+HAVING inscriptos < c.cupo_maximo;
+
+-- Asistencias de un alumno
+SELECT a.nombre, c.nombre AS curso, asis.fecha_clase, asis.presente
+FROM Alumno a
+JOIN Inscripcion i ON a.id_alumno = i.id_alumno
+JOIN Curso c ON i.id_curso = c.id_curso
+JOIN Asistencia asis ON i.id_inscripcion = asis.id_inscripcion
+WHERE a.id_alumno = 1;
+
+-- Pagos pendientes
+SELECT a.nombre, c.nombre AS curso, p.monto, p.estado
+FROM Alumno a
+JOIN Inscripcion i ON a.id_alumno = i.id_alumno
+JOIN Curso c ON i.id_curso = c.id_curso
+JOIN Pago p ON i.id_inscripcion = p.id_inscripcion
+WHERE p.estado != 'Pagado';
+
+
+-- =====================================
+-- Borrado de registros de ejemplo
+-- =====================================
+
+-- Borrar inscripción de un alumno
+DELETE FROM Inscripcion WHERE id_inscripcion = 1;
+
+-- Borrar alumno (borrará en cascada si se configuró)
+DELETE FROM Alumno WHERE id_alumno = 2;
