@@ -1,0 +1,62 @@
+CREATE DATABASE IF NOT EXISTS GestionCursos;
+USE GestionCursos;
+
+-- Tabla Alumno
+CREATE TABLE Alumno (
+    id_alumno INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(100),
+    telefono VARCHAR(20),
+    fecha_registro DATE DEFAULT CURRENT_DATE
+);
+
+-- Tabla Curso
+CREATE TABLE Curso (
+    id_curso INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    duracion INT,
+    cupo_maximo INT,
+    fecha_inicio DATE,
+    fecha_fin DATE
+);
+
+-- Tabla Inscripcion
+CREATE TABLE Inscripcion (
+    id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
+    id_alumno INT,
+    id_curso INT,
+    fecha_inscripcion DATE DEFAULT CURRENT_DATE,
+    estado VARCHAR(20) DEFAULT 'Inscripto',
+    FOREIGN KEY (id_alumno) REFERENCES Alumno(id_alumno),
+    FOREIGN KEY (id_curso) REFERENCES Curso(id_curso)
+);
+
+-- Tabla Asistencia
+CREATE TABLE Asistencia (
+    id_asistencia INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT,
+    fecha_clase DATE,
+    presente BOOLEAN,
+    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
+);
+
+-- Tabla Pago
+CREATE TABLE Pago (
+    id_pago INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT,
+    monto DECIMAL(10,2),
+    fecha_pago DATE DEFAULT CURRENT_DATE,
+    estado VARCHAR(20) DEFAULT 'Pagado',
+    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
+);
+
+-- Tabla Certificado
+CREATE TABLE Certificado (
+    id_certificado INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT,
+    fecha_emision DATE DEFAULT CURRENT_DATE,
+    archivo VARCHAR(255),
+    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
+);
