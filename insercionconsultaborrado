@@ -34,3 +34,58 @@ VALUES
 INSERT INTO Certificado (id_inscripcion, fecha_emision, archivo)
 VALUES
 (1, '2025-12-15', 'certificado_juan.pdf');
+
+
+-- cursos disponibles y cupo actual
+SELECT c.nombre, c.descripcion, c.cupo_maximo, COUNT(i.id_inscripcion) AS cupo_actual
+FROM Curso c
+LEFT JOIN Inscripcion i ON c.id_curso = i.id_curso
+GROUP BY c.id_curso;
+
+-- asistencia de un usuario
+SELECT u.nombre, c.nombre AS curso, a.fecha_clase, a.presente
+FROM Asistencia a
+JOIN Inscripcion i ON a.id_inscripcion = i.id_inscripcion
+JOIN Usuario u ON i.id_usuario = u.id_usuario
+JOIN Curso c ON i.id_curso = c.id_curso
+WHERE u.id_usuario = 1;
+
+
+-- pagos pendientes
+SELECT u.nombre, c.nombre AS curso, p.monto, p.estado
+FROM Pago p
+JOIN Inscripcion i ON p.id_inscripcion = i.id_inscripcion
+JOIN Usuario u ON i.id_usuario = u.id_usuario
+JOIN Curso c ON i.id_curso = c.id_curso
+WHERE p.estado = 'pendiente';
+
+
+-- certificados emitidos
+SELECT u.nombre, c.nombre AS curso, ce.archivo
+FROM Certificado ce
+JOIN Inscripcion i ON ce.id_inscripcion = i.id_inscripcion
+JOIN Usuario u ON i.id_usuario = u.id_usuario
+JOIN Curso c ON i.id_curso = c.id_curso;
+
+
+-- Borrar inscripción
+DELETE FROM Inscripcion WHERE id_inscripcion = 2;
+
+-- Borrar usuario
+DELETE FROM Usuario WHERE id_usuario = 2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
