@@ -1,14 +1,11 @@
-CREATE DATABASE IF NOT EXISTS GestionCursos;
-USE GestionCursos;
-
--- Tabla Alumno
-CREATE TABLE Alumno (
-    id_alumno INT AUTO_INCREMENT PRIMARY KEY,
+-- Tabla Usuario 
+CREATE TABLE Usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     dni VARCHAR(20) UNIQUE NOT NULL,
-    email VARCHAR(100),
+    email VARCHAR(100) UNIQUE NOT NULL,
     telefono VARCHAR(20),
-    fecha_registro DATE DEFAULT CURRENT_DATE
+    fecha_registro DATE NOT NULL
 );
 
 -- Tabla Curso
@@ -25,11 +22,11 @@ CREATE TABLE Curso (
 -- Tabla Inscripcion
 CREATE TABLE Inscripcion (
     id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
-    id_alumno INT,
+    id_usuario INT,
     id_curso INT,
-    fecha_inscripcion DATE DEFAULT CURRENT_DATE,
-    estado VARCHAR(20) DEFAULT 'Inscripto',
-    FOREIGN KEY (id_alumno) REFERENCES Alumno(id_alumno),
+    fecha_inscripcion DATE,
+    estado VARCHAR(20),
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
     FOREIGN KEY (id_curso) REFERENCES Curso(id_curso)
 );
 
@@ -47,8 +44,8 @@ CREATE TABLE Pago (
     id_pago INT AUTO_INCREMENT PRIMARY KEY,
     id_inscripcion INT,
     monto DECIMAL(10,2),
-    fecha_pago DATE DEFAULT CURRENT_DATE,
-    estado VARCHAR(20) DEFAULT 'Pagado',
+    fecha_pago DATE,
+    estado VARCHAR(20),
     FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
 );
 
@@ -56,7 +53,7 @@ CREATE TABLE Pago (
 CREATE TABLE Certificado (
     id_certificado INT AUTO_INCREMENT PRIMARY KEY,
     id_inscripcion INT,
-    fecha_emision DATE DEFAULT CURRENT_DATE,
+    fecha_emision DATE,
     archivo VARCHAR(255),
     FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
 );
