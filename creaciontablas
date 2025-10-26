@@ -1,59 +1,84 @@
--- Tabla Usuario 
-CREATE TABLE Usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    dni VARCHAR(20) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    telefono VARCHAR(20),
-    fecha_registro DATE NOT NULL
-);
+-- Creación de la base de datos
+CREATE DATABASE IF NOT EXISTS gestion_cursos
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
--- Tabla Curso
-CREATE TABLE Curso (
-    id_curso INT AUTO_INCREMENT PRIMARY KEY,
+USE gestion_cursos;
+
+-- =========================================
+-- TABLA: usuario
+-- =========================================
+CREATE TABLE usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    rol VARCHAR(30) NOT NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- TABLA: curso
+-- =========================================
+CREATE TABLE curso (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    duracion INT,
-    cupo_maximo INT,
-    fecha_inicio DATE,
-    fecha_fin DATE
-);
+    cupo INT NOT NULL
+) ENGINE=InnoDB;
 
--- Tabla Inscripcion
-CREATE TABLE Inscripcion (
-    id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT,
-    id_curso INT,
-    fecha_inscripcion DATE,
-    estado VARCHAR(20),
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_curso) REFERENCES Curso(id_curso)
-);
+-- =========================================
+-- TABLA: inscripcion
+-- =========================================
+CREATE TABLE inscripcion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_curso INT NOT NULL,
+    fecha_inscripcion DATE NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_curso) REFERENCES curso(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
--- Tabla Asistencia
-CREATE TABLE Asistencia (
-    id_asistencia INT AUTO_INCREMENT PRIMARY KEY,
-    id_inscripcion INT,
-    fecha_clase DATE,
-    presente BOOLEAN,
-    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
-);
+-- =========================================
+-- TABLA: pago
+-- =========================================
+CREATE TABLE pago (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT NOT NULL,
+    monto DECIMAL(10,2) NOT NULL,
+    fecha_pago DATE NOT NULL,
+    estado VARCHAR(20) DEFAULT 'pendiente',
+    FOREIGN KEY (id_inscripcion) REFERENCES inscripcion(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
--- Tabla Pago
-CREATE TABLE Pago (
-    id_pago INT AUTO_INCREMENT PRIMARY KEY,
-    id_inscripcion INT,
-    monto DECIMAL(10,2),
-    fecha_pago DATE,
-    estado VARCHAR(20),
-    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
-);
+-- =========================================
+-- TABLA: asistencia
+-- =========================================
+CREATE TABLE asistencia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT NOT NULL,
+    fecha DATE NOT NULL,
+    presente BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_inscripcion) REFERENCES inscripcion(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
--- Tabla Certificado
-CREATE TABLE Certificado (
-    id_certificado INT AUTO_INCREMENT PRIMARY KEY,
-    id_inscripcion INT,
-    fecha_emision DATE,
+-- =========================================
+-- TABLA: certificado
+-- =========================================
+CREATE TABLE certificado (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_inscripcion INT NOT NULL,
+    fecha_emision DATE NOT NULL,
     archivo VARCHAR(255),
-    FOREIGN KEY (id_inscripcion) REFERENCES Inscripcion(id_inscripcion)
-);
+    FOREIGN KEY (id_inscripcion) REFERENCES inscripcion(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
