@@ -1,12 +1,125 @@
-SELECT u.nombre AS Alumno, u.dni, c.nombre AS Curso, i.estado AS Estado_Inscripcion
-FROM Inscripcion i
-JOIN Usuario u ON i.id_usuario = u.id_usuario
-JOIN Curso c ON i.id_curso = c.id_curso;
+-- ============================================
+-- CONSULTA 1: Listado de usuarios registrados
+-- ============================================
+SELECT id, nombre, apellido, email, rol
+FROM usuario
+ORDER BY id;
 
-+----------------+-----------+-----------------+------------------+
-| Alumno         | DNI       | Curso           | Estado Inscripción|
-+----------------+-----------+-----------------+------------------+
-| Juan Pérez     | 12345678  | Taller de Java  | Activa           |
-| Ana López      | 87654321  | Diseño UX/UI    | Activa           |
-| Martín Gómez   | 11223344  | Excel Avanzado  | Activa           |
-+----------------+-----------+-----------------+------------------+
+-- RESULTADO ESPERADO:
+-- +----+----------+-----------+----------------------+---------------+
+-- | id | nombre   | apellido  | email                | rol           |
+-- +----+----------+-----------+----------------------+---------------+
+-- | 1  | Nicolás  | Gómez     | admin@instituto.com  | Administrador |
+-- | 2  | Lucía    | Fernández | lucia@gmail.com      | Alumno        |
+-- | 3  | Pablo    | Rivas     | pablo@gmail.com      | Alumno        |
+-- +----+----------+-----------+----------------------+---------------+
+
+
+-- ============================================
+-- CONSULTA 2: Listado de cursos disponibles
+-- ============================================
+SELECT id, nombre, descripcion, cupo
+FROM curso
+ORDER BY id;
+
+-- RESULTADO ESPERADO:
+-- +----+------------------+----------------------------------------+------+
+-- | id | nombre           | descripcion                            | cupo |
+-- +----+------------------+----------------------------------------+------+
+-- | 1  | Desarrollo Web   | Curso de diseño y desarrollo web       | 25   |
+-- | 2  | Java Básico      | Introducción a la programación en Java | 20   |
+-- +----+------------------+----------------------------------------+------+
+
+
+-- ============================================
+-- CONSULTA 3: Inscripciones de alumnos por curso
+-- ============================================
+SELECT i.id AS id_inscripcion,
+       u.nombre AS alumno,
+       c.nombre AS curso,
+       i.fecha_inscripcion
+FROM inscripcion i
+JOIN usuario u ON i.id_usuario = u.id
+JOIN curso c ON i.id_curso = c.id
+ORDER BY i.id;
+
+-- RESULTADO ESPERADO:
+-- +----------------+---------+------------------+-------------------+
+-- | id_inscripcion | alumno  | curso            | fecha_inscripcion |
+-- +----------------+---------+------------------+-------------------+
+-- | 1              | Lucía   | Desarrollo Web   | 2025-10-20        |
+-- | 2              | Pablo   | Java Básico      | 2025-10-21        |
+-- +----------------+---------+------------------+-------------------+
+
+
+-- ============================================
+-- CONSULTA 4: Pagos confirmados
+-- ============================================
+SELECT p.id, u.nombre AS alumno, c.nombre AS curso, p.monto, p.estado
+FROM pago p
+JOIN inscripcion i ON p.id_inscripcion = i.id
+JOIN usuario u ON i.id_usuario = u.id
+JOIN curso c ON i.id_curso = c.id
+WHERE p.estado = 'confirmado';
+
+-- RESULTADO ESPERADO:
+-- +----+--------+------------------+--------+-------------+
+-- | id | alumno | curso            | monto  | estado      |
+-- +----+--------+------------------+--------+-------------+
+-- | 1  | Lucía  | Desarrollo Web   | 8000.0 | confirmado  |
+-- +----+--------+------------------+--------+-------------+
+
+
+-- ============================================
+-- CONSULTA 5: Registro de asistencias
+-- ============================================
+SELECT u.nombre AS alumno, c.nombre AS curso, a.fecha, a.presente
+FROM asistencia a
+JOIN inscripcion i ON a.id_inscripcion = i.id
+JOIN usuario u ON i.id_usuario = u.id
+JOIN curso c ON i.id_curso = c.id
+ORDER BY a.fecha;
+
+-- RESULTADO ESPERADO:
+-- +--------+------------------+------------+-----------+
+-- | alumno | curso            | fecha      | presente  |
+-- +--------+------------------+------------+-----------+
+-- | Lucía  | Desarrollo Web   | 2025-10-22 | TRUE      |
+-- | Lucía  | Desarrollo Web   | 2025-10-23 | FALSE     |
+-- | Pablo  | Java Básico      | 2025-10-23 | TRUE      |
+-- +--------+------------------+------------+-----------+
+
+
+-- ============================================
+-- CONSULTA 6: Certificados emitidos
+-- ============================================
+SELECT u.nombre AS alumno, c.nombre AS curso, ce.fecha_emision, ce.archivo
+FROM certificado ce
+JOIN inscripcion i ON ce.id_inscripcion = i.id
+JOIN usuario u ON i.id_usuario = u.id
+JOIN curso c ON i.id_curso = c.id;
+
+-- RESULTADO ESPERADO:
+-- +--------+------------------+---------------+---------------------------+
+-- | alumno | curso            | fecha_emision | archivo                   |
+-- +--------+------------------+---------------+---------------------------+
+-- | Lucía  | Desarrollo Web   | 2025-10-25    | certificado_lucia.pdf     |
+-- +--------+------------------+---------------+---------------------------+
+
+
+-- ============================================
+-- CONSULTA 7: Pagos pendientes
+-- ============================================
+SELECT p.id, u.nombre AS alumno, c.nombre AS curso, p.monto, p.estado
+FROM pago p
+JOIN inscripcion i ON p.id_inscripcion = i.id
+JOIN usuario u ON i.id_usuario = u.id
+JOIN curso c ON i.id_curso = c.id
+WHERE p.estado = 'pendiente';
+
+-- RESULTADO ESPERADO:
+-- +----+--------+--------------+--------+-----------+
+-- | id | alumno | curso        | monto  | estado    |
+-- +----+--------+--------------+--------+-----------+
+-- | 2  | Pablo  | Java Básico  | 7000.0 | pendiente |
+-- +----+--------+--------------+--------+-----------+
