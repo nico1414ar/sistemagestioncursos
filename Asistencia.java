@@ -8,7 +8,7 @@ import java.sql.Date;
 
 public class Asistencia {
     private int id;
-    private int idInscripcion;  
+    private int idInscripcion;  // FK hacia inscripcion
     private Date fechaClase;
     private boolean presente;
 
@@ -43,4 +43,3 @@ public class Asistencia {
                 " - Presente: " + (presente ? "Sí" : "No");
     }
 }
-

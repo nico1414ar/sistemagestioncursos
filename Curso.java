@@ -4,7 +4,7 @@
  */
 package nico.gestion.gestioncyt;
 
-public class Curso {
+public class Curso implements Identificable {
     private int id;
     private String nombre;
     private String descripcion;
@@ -23,17 +23,38 @@ public class Curso {
         this(0, nombre, descripcion, cupo);
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    @Override
+    public int getId() { 
+        return id; 
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setId(int id) { 
+        this.id = id; 
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getNombre() { 
+        return nombre; 
+    }
 
-    public int getCupo() { return cupo; }
-    public void setCupo(int cupo) { this.cupo = cupo; }
+    public void setNombre(String nombre) { 
+        this.nombre = nombre; 
+    }
+
+    public String getDescripcion() { 
+        return descripcion; 
+    }
+
+    public void setDescripcion(String descripcion) { 
+        this.descripcion = descripcion; 
+    }
+
+    public int getCupo() { 
+        return cupo; 
+    }
+
+    public void setCupo(int cupo) { 
+        this.cupo = cupo; 
+    }
 
     @Override
     public String toString() {

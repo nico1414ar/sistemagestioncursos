@@ -6,7 +6,7 @@ package nico.gestion.gestioncyt;
 
 import java.sql.Date;
 
-public class Inscripcion {
+public class Inscripcion implements Identificable {
     private int id;
     private int idUsuario;
     private int idCurso;
@@ -25,15 +25,36 @@ public class Inscripcion {
         this(0, idUsuario, idCurso, fecha);
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    @Override
+    public int getId() { 
+        return id; 
+    }
 
-    public int getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public void setId(int id) { 
+        this.id = id; 
+    }
 
-    public int getIdCurso() { return idCurso; }
-    public void setIdCurso(int idCurso) { this.idCurso = idCurso; }
+    public int getIdUsuario() { 
+        return idUsuario; 
+    }
 
-    public Date getFecha() { return fecha; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public void setIdUsuario(int idUsuario) { 
+        this.idUsuario = idUsuario; 
+    }
+
+    public int getIdCurso() { 
+        return idCurso; 
+    }
+
+    public void setIdCurso(int idCurso) { 
+        this.idCurso = idCurso; 
+    }
+
+    public Date getFecha() { 
+        return fecha; 
+    }
+
+    public void setFecha(Date fecha) { 
+        this.fecha = fecha; 
+    }
 }

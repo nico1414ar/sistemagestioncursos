@@ -7,6 +7,8 @@ package nico.gestion.gestioncyt;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class LoginGUI extends JFrame {
     private final JTextField txtEmail = new JTextField(20);
@@ -26,13 +28,21 @@ public class LoginGUI extends JFrame {
         gbc.insets = new Insets(8,8,8,8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx=0; gbc.gridy=0; p.add(new JLabel("Email:"), gbc);
-        gbc.gridx=1; p.add(txtEmail, gbc);
+        gbc.gridx = 0; 
+        gbc.gridy = 0; 
+        p.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1; 
+        p.add(txtEmail, gbc);
 
-        gbc.gridx=0; gbc.gridy=1; p.add(new JLabel("Password:"), gbc);
-        gbc.gridx=1; p.add(txtPass, gbc);
+        gbc.gridx = 0; 
+        gbc.gridy = 1; 
+        p.add(new JLabel("Password:"), gbc);
+        gbc.gridx = 1; 
+        p.add(txtPass, gbc);
 
-        gbc.gridx=0; gbc.gridy=2; gbc.gridwidth=2;
+        gbc.gridx = 0; 
+        gbc.gridy = 2; 
+        gbc.gridwidth = 2;
         btnLogin.addActionListener(this::login);
         p.add(btnLogin, gbc);
 
@@ -55,6 +65,16 @@ public class LoginGUI extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombre() + " (" + u.getRol() + ")");
+
+        // ===== Registro en archivo de texto (log de sesiones) =====
+        try (FileWriter fw = new FileWriter("log_sesiones.txt", true)) {
+            fw.write("Login de: " + u.getEmail() + " - Rol: " + u.getRol() + System.lineSeparator());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            // No detenemos el programa si falla el log
+        }
+        // ==========================================================
+
         this.dispose();
 
         if ("Administrador".equalsIgnoreCase(u.getRol())) {

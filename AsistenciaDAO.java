@@ -12,7 +12,7 @@ public class AsistenciaDAO {
 
     public List<Asistencia> obtenerTodas() {
         List<Asistencia> lista = new ArrayList<>();
-        String sql = "SELECT id, id_inscripcion, fecha_clase, presente FROM asistencia ORDER BY id";
+        String sql = "SELECT id, id_inscripcion, fecha, presente FROM asistencia ORDER BY id";
         try (Connection c = Conexion.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -20,7 +20,7 @@ public class AsistenciaDAO {
                 lista.add(new Asistencia(
                         rs.getInt("id"),
                         rs.getInt("id_inscripcion"),
-                        rs.getDate("fecha_clase"),
+                        rs.getDate("fecha"),
                         rs.getBoolean("presente")
                 ));
             }
@@ -31,7 +31,7 @@ public class AsistenciaDAO {
     }
 
     public int agregar(Asistencia a) {
-        String sql = "INSERT INTO asistencia (id_inscripcion, fecha_clase, presente) VALUES (?,?,?)";
+        String sql = "INSERT INTO asistencia (id_inscripcion, fecha, presente) VALUES (?,?,?)";
         try (Connection c = Conexion.getConnection();
              PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, a.getIdInscripcion());
